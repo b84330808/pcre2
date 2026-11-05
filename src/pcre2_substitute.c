@@ -361,7 +361,17 @@ default_substitute_case_callout(PCRE2_SPTR input, PCRE2_SIZE input_len, PCRE2_UC
     {
       uint32_t type = UCD_CHARTYPE(ch);
       if (PRIV(ucp_gentype)[type] == ucp_L && type != (next_to_upper ? ucp_Lu : ucp_Ll))
-        ch = UCD_OTHERCASE(ch);
+      {
+        uint32_t other_case = UCD_OTHERCASE(ch);
+
+#if PCRE2_CODE_UNIT_WIDTH == 8
+        /* Without UTF, the other case of a character such as U+00FF may be above
+        255, where it does not fit in a code unit. Leave the character as it is,
+        which is also how such a pair is treated when matching caselessly. */
+        if (utf || other_case <= 255)
+#endif
+          ch = other_case;
+      }
 
       /* TODO This is far from correct... it doesn't support the SpecialCasing.txt
       mappings, but worse, it's not even correct for all the ordinary case

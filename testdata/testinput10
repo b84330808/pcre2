@@ -671,6 +671,18 @@
 /X(\x{e1})Y/i,ucp,replace=>\L$1<,substitute_extended
     X\x{c1}Y
 
+# These characters have another case that does not fit in one code unit. They
+# must stay as they are, rather than being truncated to another character.
+
+/(.)/ucp,replace=>\U$1<,substitute_extended
+    \x{ff}
+    \x{b5}
+    \x{df}
+    \x{e1}
+
+/(.)/ucp,replace=>\u$1<,substitute_extended
+    \x{ff}
+
 # Without UTF or UCP characters > 127 have only one case in the default locale.
 
 /X(\x{e1})Y/replace=>\U$1<,substitute_extended

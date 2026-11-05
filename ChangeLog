@@ -22,6 +22,11 @@ backtracking after the recursive call.
 3. (#1040) Fixed the start_match field passed to interpreter callouts after \K
 resets the start of a match, including restoration on backtracking.
 
+4. In the 8-bit library without UTF, case forcing in pcre2_substitute() with
+PCRE2_UCP truncated the other case of characters such as U+00FF (whose other
+case, U+0178, is above 255) to one code unit, so that it output the wrong
+character. These characters are now left unchanged.
+
 
 Version 10.49 28-September-2026
 -------------------------------

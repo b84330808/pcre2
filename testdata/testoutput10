@@ -1975,6 +1975,23 @@ Subject length lower bound = 1
     X\x{c1}Y
  1: >\xe1<
 
+# These characters have another case that does not fit in one code unit. They
+# must stay as they are, rather than being truncated to another character.
+
+/(.)/ucp,replace=>\U$1<,substitute_extended
+    \x{ff}
+ 1: >\xff<
+    \x{b5}
+ 1: >\xb5<
+    \x{df}
+ 1: >\xdf<
+    \x{e1}
+ 1: >\xc1<
+
+/(.)/ucp,replace=>\u$1<,substitute_extended
+    \x{ff}
+ 1: >\xff<
+
 # Without UTF or UCP characters > 127 have only one case in the default locale.
 
 /X(\x{e1})Y/replace=>\U$1<,substitute_extended
